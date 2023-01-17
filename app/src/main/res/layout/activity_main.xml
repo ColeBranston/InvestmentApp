@@ -10,6 +10,7 @@
         android:id="@+id/Search"
         android:layout_width="69dp"
         android:layout_height="55dp"
+        android:onClick="LaunchSearch"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.916"
@@ -32,15 +33,14 @@
 
     <ScrollView
         android:id="@+id/Listing"
-        android:layout_width="404dp"
+        android:layout_width="409dp"
         android:layout_height="578dp"
         android:background="#DCDCDC"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.66">
+        app:layout_constraintVertical_bias="0.673">
 
     </ScrollView>
 
