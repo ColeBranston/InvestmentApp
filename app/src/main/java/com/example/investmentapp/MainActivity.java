@@ -1,7 +1,6 @@
 package com.example.investmentapp;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.ActionBar;
 import android.os.Bundle;
 import android.view.View;
