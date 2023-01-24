@@ -20,4 +20,9 @@ public class MainActivity extends AppCompatActivity {
         Intent i = new Intent(this, search_screen.class);
         setContentView(R.layout.search_screen);
     }
+
+    public void backtoMain(View v){
+        Intent i = new Intent(this, MainActivity.class);
+        setContentView(R.layout.activity_main);
+    }
 }
