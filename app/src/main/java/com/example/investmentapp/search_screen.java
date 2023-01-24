@@ -13,6 +13,5 @@ public class search_screen extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         View v = this.getWindow().getDecorView();
         v.setSystemUiVisibility(View.INVISIBLE);
-
     }
 }
