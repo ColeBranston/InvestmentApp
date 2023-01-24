@@ -11,6 +11,7 @@
         android:layout_width="82dp"
         android:layout_height="69dp"
         android:layout_marginBottom="13dp"
+        android:backgroundTint="#00FFFFFF"
         android:onClick="LaunchSearch"
         app:layout_constraintBottom_toTopOf="@+id/Listing"
         app:layout_constraintEnd_toEndOf="parent"
@@ -20,30 +21,16 @@
         app:layout_constraintVertical_bias="0.015"
         app:srcCompat="@drawable/ic_search" />
 
-    <ImageButton
-        android:id="@+id/Options"
-        android:layout_width="76dp"
-        android:layout_height="68dp"
-        android:layout_marginBottom="13dp"
-        app:layout_constraintBottom_toTopOf="@+id/Listing"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.074"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.016"
-        app:srcCompat="@drawable/ic_menu_burger" />
-
     <ScrollView
         android:id="@+id/Listing"
-        android:layout_width="404dp"
-        android:layout_height="607dp"
+        android:layout_width="390dp"
+        android:layout_height="577dp"
         android:background="#DCDCDC"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.428"
+        app:layout_constraintHorizontal_bias="0.476"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.741">
+        app:layout_constraintTop_toTopOf="parent">
 
     </ScrollView>
 
@@ -64,5 +51,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.035" />
+
+    <ImageButton
+        android:id="@+id/imageButton4"
+        android:layout_width="67dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="#00FFFFFF"
+        android:onClick="toLogin"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.956"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Listing"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/user__2___1_" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.example.investmentapp.ui.login.LoginActivity;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -20,8 +22,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.search_screen);
     }
 
-    public void backtoMain(View v){
+    public void backtoMain(View v) {
         Intent i = new Intent(this, MainActivity.class);
         setContentView(R.layout.activity_main);
+    }
+
+    public void toLogin(View v) {
+        Intent i = new Intent(this, LoginActivity.class);
+        setContentView(R.layout.activity_login);
     }
 }
