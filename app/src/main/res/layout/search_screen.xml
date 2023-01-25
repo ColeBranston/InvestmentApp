@@ -8,13 +8,14 @@
     tools:context=".MainActivity">
 
     <EditText
-        android:id="@+id/editTextTextPersonName"
+        android:id="@+id/searchText"
         android:layout_width="281dp"
         android:layout_height="62dp"
         android:autofillHints="Symbol"
         android:ems="10"
-        android:hint="Search"
+        android:hint="Search By Ticker"
         android:inputType="textPersonName"
+        android:onClick="tickerSearch"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -34,5 +35,41 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.023"
         app:srcCompat="@drawable/arrow" />
+
+    <TextView
+        android:id="@+id/stockpriceText"
+        android:layout_width="112dp"
+        android:layout_height="36dp"
+        android:background="#00FFFFFF"
+        android:backgroundTint="#00000000"
+        android:fontFamily="sans-serif-medium"
+        android:text="Stock Price"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.107"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/searchText"
+        app:layout_constraintVertical_bias="0.738"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/stocknameText"
+        android:layout_width="112dp"
+        android:layout_height="36dp"
+        android:background="#00FFFFFF"
+        android:backgroundTint="#00000000"
+        android:fontFamily="sans-serif-medium"
+        android:text="Stock Name"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.107"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/stockpriceText"
+        app:layout_constraintVertical_bias="0.166"
+        tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
