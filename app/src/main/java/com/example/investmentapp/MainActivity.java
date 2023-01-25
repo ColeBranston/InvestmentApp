@@ -173,9 +173,15 @@ public class MainActivity extends AppCompatActivity {
             // message to display
             text = "Missing Information";
 
-            usernameInput.setBackgroundColor(Color.argb(20, 255, 0, 0));
-            passwordInput.setBackgroundColor(Color.argb(20, 255, 0, 0));
+            if (user.equals("")) {
+                usernameInput.setBackgroundColor(Color.argb(20, 255, 0, 0));
+                passwordInput.setBackgroundColor(Color.argb(100, 255, 255, 255));
+            }
 
+            else {
+                passwordInput.setBackgroundColor(Color.argb(20, 255, 0, 0));
+                usernameInput.setBackgroundColor(Color.argb(100, 255, 255, 255));
+            }
         }
 
         else {
