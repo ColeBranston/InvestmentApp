@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
         private ProgressDialog progress;
         String quoteName;
         String quotePrice;
+        String quoteDesc;
 
         @Override
         protected void onPreExecute() {
@@ -130,9 +131,11 @@ public class MainActivity extends AppCompatActivity {
 
                 JSONObject json2 = new JSONObject(stringBuilder2.toString());
                 String quoteName1 = json2.getString("Name");
+                String quoteDesc1 = json2.getString("Description");
 
                 quoteName = quoteName1;
                 quotePrice = quotePrice1;
+                quoteDesc = quoteDesc1;
 
                 return "";
 
@@ -154,8 +157,16 @@ public class MainActivity extends AppCompatActivity {
                 TextView stocknameText = findViewById(R.id.stocknameText);
                 stocknameText.setText("Stock Name: " + quoteName);
                 stocknameText.setVisibility(View.VISIBLE);
+
+                TextView stockdescText = findViewById(R.id.stockdescText);
+                stockdescText.setText("Description: "+quoteDesc);
+                stockdescText.setVisibility(View.VISIBLE);
+
             } else {
                 Toast.makeText(MainActivity.this, "An error occurred while retrieving the stock price.", Toast.LENGTH_SHORT).show();
+                quoteName = null;
+                quotePrice = null;
+                quoteDesc = null;
             }
         }
     }
