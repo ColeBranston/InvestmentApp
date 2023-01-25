@@ -10,10 +10,9 @@
         android:id="@+id/Search"
         android:layout_width="82dp"
         android:layout_height="69dp"
-        android:layout_marginBottom="13dp"
         android:backgroundTint="#00FFFFFF"
         android:onClick="LaunchSearch"
-        app:layout_constraintBottom_toTopOf="@+id/Listing"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.951"
         app:layout_constraintStart_toStartOf="parent"
@@ -56,15 +55,13 @@
         android:id="@+id/imageButton4"
         android:layout_width="67dp"
         android:layout_height="56dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginBottom="15dp"
         android:backgroundTint="#00FFFFFF"
         android:onClick="toLogin"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.956"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Listing"
-        app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/user__2___1_" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
