@@ -157,6 +157,9 @@ public class MainActivity extends AppCompatActivity {
 
             } else {
                 Toast.makeText(MainActivity.this, "An error occurred while retrieving the stock price.", Toast.LENGTH_SHORT).show();
+                quoteName = null;
+                quotePrice = null;
+                quoteDesc = null;
             }
         }
     }
