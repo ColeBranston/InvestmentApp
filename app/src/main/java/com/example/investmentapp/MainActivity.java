@@ -16,11 +16,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.Locale;
+import java.util.Properties;
+
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -50,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
     }
 
-    public void tickerSearch(View v){
+    public void tickerSearch(View v) {
         EditText searchText = findViewById(R.id.searchText);
         String ticker = searchText.getText().toString().toUpperCase();
         new TickerSearchTask().execute(ticker);
@@ -141,11 +148,11 @@ public class MainActivity extends AppCompatActivity {
 
             if (result != null) {
                 TextView stockpriceText = findViewById(R.id.stockpriceText);
-                stockpriceText.setText("Stock Price: "+quotePrice);
+                stockpriceText.setText("Stock Price: " + quotePrice);
                 stockpriceText.setVisibility(View.VISIBLE);
 
                 TextView stocknameText = findViewById(R.id.stocknameText);
-                stocknameText.setText("Stock Name: "+quoteName);
+                stocknameText.setText("Stock Name: " + quoteName);
                 stocknameText.setVisibility(View.VISIBLE);
             } else {
                 Toast.makeText(MainActivity.this, "An error occurred while retrieving the stock price.", Toast.LENGTH_SHORT).show();
@@ -169,22 +176,18 @@ public class MainActivity extends AppCompatActivity {
 
         Toast toast = Toast.makeText(context, text, Toast.LENGTH_LONG);
 
-        if (user.equals("") || pass.equals("")){
+        if (user.equals("") || pass.equals("")) {
             // message to display
             text = "Missing Information";
 
             if (user.equals("")) {
                 usernameInput.setBackgroundColor(Color.argb(20, 255, 0, 0));
                 passwordInput.setBackgroundColor(Color.argb(100, 255, 255, 255));
-            }
-
-            else {
+            } else {
                 passwordInput.setBackgroundColor(Color.argb(20, 255, 0, 0));
                 usernameInput.setBackgroundColor(Color.argb(100, 255, 255, 255));
             }
-        }
-
-        else {
+        } else {
             // message to display
             text = "Welcome " + user;
             back = true;
@@ -198,16 +201,75 @@ public class MainActivity extends AppCompatActivity {
         // to show the toast
         toast.show();
 
-        if (back){backtoMain(null);}
+        if (back) {
+            backtoMain(null);
+        }
 
 
     }
 
-    public void registerNow(View v){
+    public void registerNow(View v) {
         Intent i = new Intent(this, register.class);
         setContentView(R.layout.activity_register);
     }
+
+
+    public void submit(View v) {
+
+        EditText email1 = (EditText) findViewById(R.id.email);
+        EditText desiredUsername1 = (EditText) findViewById(R.id.desiredUsername);
+        EditText desiredPassword1 = (EditText) findViewById(R.id.desiredPassword);
+        EditText desiredPassword2 = (EditText) findViewById(R.id.desiredPassword2);
+
+        String email = email1.getText().toString();
+        String desiredUsername = desiredUsername1.getText().toString();
+        String desiredPass1 = desiredPassword1.getText().toString();
+        String desiredPass2 = desiredPassword2.getText().toString();
+
+        email1.setBackgroundColor(Color.argb(0, 0, 0, 0)); desiredUsername1.setBackgroundColor(Color.argb(0, 0, 0, 0)); desiredPassword1.setBackgroundColor(Color.argb(0, 0, 0, 0)); desiredPassword2.setBackgroundColor(Color.argb(0, 0, 0, 0));
+        if (email.equals("")){email1.setBackgroundColor(Color.argb(20, 255, 0, 0));}
+        if (desiredUsername.equals("")){desiredUsername1.setBackgroundColor(Color.argb(20, 255, 0, 0));}
+        if (desiredPass1.equals("")){desiredPassword1.setBackgroundColor(Color.argb(20, 255, 0, 0));}
+        if (desiredPass2.equals("")){desiredPassword2.setBackgroundColor(Color.argb(20, 255, 0, 0));}
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Properties props = new Properties();
+                props.put("mail.smtp.host", "smtp.gmail.com");
+                props.put("mail.smtp.socketFactory.port", "465");
+                props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+                props.put("mail.smtp.auth", "true");
+                props.put("mail.smtp.port", "465");
+
+                Session session = Session.getDefaultInstance(props,
+                        new javax.mail.Authenticator() {
+                            protected PasswordAuthentication getPasswordAuthentication() {
+                                return new PasswordAuthentication("WallStreetTrader2008", "cwpoklpsfgiupdyz");
+                            }
+                        });
+
+                try {
+                    MimeMessage message = new MimeMessage(session);
+                    message.setFrom(new InternetAddress("WallStreetTrader2008@gmail.com"));
+                    message.addRecipient(Message.RecipientType.TO, new InternetAddress(email));
+                    message.setSubject("Test Email");
+                    message.setText("Hello, this is a test email.");
+
+                    Transport.send(message);
+
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+        }).start();
     }
+}
+
+
+
+
 
 
 
