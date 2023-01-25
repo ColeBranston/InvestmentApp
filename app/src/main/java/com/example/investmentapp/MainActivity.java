@@ -79,7 +79,11 @@ public class MainActivity extends AppCompatActivity {
         if (back){backtoMain(null);}
 
 
+        }
 
-
+    public void registerNow(View v){
+        Intent i = new Intent(this, register.class);
+        setContentView(R.layout.activity_register);
     }
+
 }
