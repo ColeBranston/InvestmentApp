@@ -1,41 +1,28 @@
 package com.example.investmentapp;
 
 import android.app.ProgressDialog;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Patterns;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
 import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
-import java.util.Random;
 
 import javax.mail.Message;
+import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
@@ -43,15 +30,9 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 public class MainActivity extends AppCompatActivity {
-    String randomNumber = null;
+
     String apiKey = "KN4OJJ69TA7SFREQ";
     ProgressDialog progress;
-    String realUser = "";
-    String realPass = "";
-    String desiredUsername = "";
-    String desiredPass1 = "";
-    String email = "";
-    boolean loggedIn = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +40,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         View v = this.getWindow().getDecorView();
         v.setSystemUiVisibility(View.INVISIBLE);
-
-
     }
 
     public void LaunchSearch(View v) {
@@ -71,21 +50,6 @@ public class MainActivity extends AppCompatActivity {
     public void backtoMain(View v) {
         Intent i = new Intent(this, MainActivity.class);
         setContentView(R.layout.activity_main);
-
-        if (loggedIn) {
-            ImageButton settingsButton = findViewById(R.id.imageButton4);
-            settingsButton.setVisibility(View.INVISIBLE);
-            ImageButton profileButton = findViewById(R.id.profileButton);
-            profileButton.setVisibility(View.VISIBLE);
-
-        }
-        else{
-            ImageButton settingsButton = findViewById(R.id.imageButton4);
-            settingsButton.setVisibility(View.VISIBLE);
-            ImageButton profileButton = findViewById(R.id.profileButton);
-            profileButton.setVisibility(View.INVISIBLE);
-        }
-
     }
 
     public void toLogin(View v) {
@@ -223,44 +187,36 @@ public class MainActivity extends AppCompatActivity {
 
         Toast toast = Toast.makeText(context, text, Toast.LENGTH_LONG);
 
-        System.out.println("Login: "+user+"\nPassword: "+pass+"\nReal Login: "+realUser+"\nReal Password: "+realPass);
         if (user.equals("") || pass.equals("")) {
             // message to display
             text = "Missing Information";
-            passwordInput.setBackgroundColor(Color.argb(100, 255, 255, 255));
-            usernameInput.setBackgroundColor(Color.argb(100, 255, 255, 255));
 
             if (user.equals("")) {
                 usernameInput.setBackgroundColor(Color.argb(20, 255, 0, 0));
-            }
-            if (pass.equals("")) {
-                passwordInput.setBackgroundColor(Color.argb(20, 255, 0, 0));
-            }
-        }
-        else if(user.equals(realUser) && pass.equals(realPass)){
-
-            loggedIn = true;
-            text = "Welcome " + user;
-            backtoMain(null);
-
-        }
-        else {
-
-            if (user.equals(realUser)){
+                passwordInput.setBackgroundColor(Color.argb(100, 255, 255, 255));
+            } else {
                 passwordInput.setBackgroundColor(Color.argb(20, 255, 0, 0));
                 usernameInput.setBackgroundColor(Color.argb(100, 255, 255, 255));
             }
-            else{
-                usernameInput.setBackgroundColor(Color.argb(20, 255, 0, 0));
-                passwordInput.setBackgroundColor(Color.argb(100, 255, 255, 255));
-            }
+        } else {
+            // message to display
+            text = "Welcome " + user;
+            back = true;
 
-            text = "Invalid Username or Password";
         }
 
+        // toast time duration, can also set manual value
+        int duration = Toast.LENGTH_LONG;
+        toast = Toast.makeText(context, text, duration);
+
         // to show the toast
-        toast = Toast.makeText(context, text, Toast.LENGTH_LONG);
         toast.show();
+
+        if (back) {
+            backtoMain(null);
+        }
+
+
     }
 
     public void registerNow(View v) {
@@ -268,19 +224,17 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
     }
 
+
     public void submit(View v) {
 
         EditText email1 = (EditText) findViewById(R.id.email);
         EditText desiredUsername1 = (EditText) findViewById(R.id.desiredUsername);
         EditText desiredPassword1 = (EditText) findViewById(R.id.desiredPassword);
-        EditText desiredPassword2 = (EditText) findViewById(R.id.desiredPassword3);
-        EditText code1 = (EditText) findViewById(R.id.accessCode) ;
-        Button button2 = (Button) findViewById(R.id.button2);
-        Button signUp = (Button) findViewById(R.id.signUp);
+        EditText desiredPassword2 = (EditText) findViewById(R.id.desiredPassword2);
 
-        email = email1.getText().toString();
-        desiredUsername = desiredUsername1.getText().toString();
-        desiredPass1 = desiredPassword1.getText().toString();
+        String email = email1.getText().toString();
+        String desiredUsername = desiredUsername1.getText().toString();
+        String desiredPass1 = desiredPassword1.getText().toString();
         String desiredPass2 = desiredPassword2.getText().toString();
 
         email1.setBackgroundColor(Color.argb(0, 0, 0, 0)); desiredUsername1.setBackgroundColor(Color.argb(0, 0, 0, 0)); desiredPassword1.setBackgroundColor(Color.argb(0, 0, 0, 0)); desiredPassword2.setBackgroundColor(Color.argb(0, 0, 0, 0));
@@ -288,117 +242,41 @@ public class MainActivity extends AppCompatActivity {
         if (desiredUsername.equals("")){desiredUsername1.setBackgroundColor(Color.argb(20, 255, 0, 0));}
         if (desiredPass1.equals("")){desiredPassword1.setBackgroundColor(Color.argb(20, 255, 0, 0));}
         if (desiredPass2.equals("")){desiredPassword2.setBackgroundColor(Color.argb(20, 255, 0, 0));}
-        if (!desiredPass1.equals(desiredPass2)){desiredPassword1.setBackgroundColor(Color.argb(20, 255, 0, 0));desiredPassword2.setBackgroundColor(Color.argb(20, 255, 0, 0));}
 
-        if (desiredUsername.equals("") || desiredPass1.equals("") || desiredPass2.equals("") || !desiredPass1.equals(desiredPass2)){
-            Toast toast = Toast.makeText(getApplicationContext(), "Missing Information", Toast.LENGTH_LONG);
-            toast.show();
-        }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Properties props = new Properties();
+                props.put("mail.smtp.host", "smtp.gmail.com");
+                props.put("mail.smtp.socketFactory.port", "465");
+                props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+                props.put("mail.smtp.auth", "true");
+                props.put("mail.smtp.port", "465");
 
-        else {
-            Random random = new Random();
-            int randomNumber1 = (int) (Math.random() * (9999 - 1000 + 1)) + 1000;
-            randomNumber = Integer.toString(randomNumber1);
+                Session session = Session.getDefaultInstance(props,
+                        new javax.mail.Authenticator() {
+                            protected PasswordAuthentication getPasswordAuthentication() {
+                                return new PasswordAuthentication("WallStreetTrader2008", "cwpoklpsfgiupdyz");
+                            }
+                        });
 
-            if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                // Show error message or take other appropriate action
-                email1.setBackgroundColor(Color.argb(20, 255, 0, 0));
+                try {
+                    MimeMessage message = new MimeMessage(session);
+                    message.setFrom(new InternetAddress("WallStreetTrader2008@gmail.com"));
+                    message.addRecipient(Message.RecipientType.TO, new InternetAddress(email));
+                    message.setSubject("Test Email");
+                    message.setText("Hello, this is a test email.");
 
-                Toast toast = Toast.makeText(getApplicationContext(), "Invalid Email Address", Toast.LENGTH_LONG);
-                toast.show();
-            } else {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Properties props = new Properties();
-                        props.put("mail.smtp.host", "smtp.gmail.com");
-                        props.put("mail.smtp.socketFactory.port", "465");
-                        props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-                        props.put("mail.smtp.auth", "true");
-                        props.put("mail.smtp.port", "465");
+                    Transport.send(message);
 
-                        Session session = Session.getDefaultInstance(props,
-                                new javax.mail.Authenticator() {
-                                    protected PasswordAuthentication getPasswordAuthentication() {
-                                        return new PasswordAuthentication("WallStreetTrader2008", "cwpoklpsfgiupdyz");
-                                    }
-                                });
-
-                        try {
-                            MimeMessage message = new MimeMessage(session);
-                            message.setFrom(new InternetAddress("WallStreetTrader2008@gmail.com"));
-                            message.addRecipient(Message.RecipientType.TO, new InternetAddress(email));
-                            message.setSubject("Welcome To Wall Street Trader!");
-                            message.setText("Hey, " + desiredUsername + " welcome to the team!\n\n\nHere is your access code: \n\n" + randomNumber);
-
-                            Transport.send(message);
-
-                        } catch (Exception e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-
-                }).start();
-
-                email1.setVisibility(View.INVISIBLE);
-                desiredUsername1.setVisibility(View.INVISIBLE);
-                desiredPassword1.setVisibility(View.INVISIBLE);
-                desiredPassword2.setVisibility(View.INVISIBLE);
-                button2.setVisibility((View.INVISIBLE));
-                signUp.setVisibility(View.VISIBLE);
-                code1.setVisibility(View.VISIBLE);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
-        }
-    }
 
-    public void codeFunction(View view){
-
-        EditText code1 = (EditText) findViewById(R.id.accessCode) ;
-        String code = code1.getText().toString();
-
-        if (code.equals(randomNumber)){
-
-            realUser = desiredUsername;
-            realPass = desiredPass1;
-
-            Toast toast = Toast.makeText(getApplicationContext(), "Thank you For Registering!", Toast.LENGTH_LONG);
-            toLogin(null);
-            toast.show();
-
-
-        }
-
-        else {
-            code1.setBackgroundColor(Color.argb(20, 255, 0, 0));
-            Toast toast = Toast.makeText(getApplicationContext(), "Invalid Access Code!", Toast.LENGTH_LONG);
-            toast.show();
-        }
-
-
-    }
-
-    public void toProfile(View view){
-        Intent i = new Intent(this, settings.class);
-        setContentView(R.layout.activity_profile);
-        TextView emailShow = findViewById(R.id.address);
-        TextView userShow = findViewById(R.id.usernameShow);
-        TextView passShow = findViewById(R.id.passwordShow);
-
-        emailShow.setText(email);
-        userShow.setText(realUser);
-        passShow.setText(realPass);
-
-    }
-
-    public void logout(View view){
-        realUser = "";
-        realPass = "";
-        email = "";
-        loggedIn = false;
-        backtoMain(null);
+        }).start();
     }
 }
-
 
 
 
