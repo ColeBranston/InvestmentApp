@@ -76,8 +76,8 @@
 
             <TextView
                 android:id="@+id/stockdescText"
-                android:layout_width="375dp"
-                android:layout_height="412dp"
+                android:layout_width="match_parent"
+                android:layout_height="167dp"
                 android:background="#00FFFFFF"
                 android:backgroundTint="#00000000"
                 android:fontFamily="sans-serif-medium"
@@ -85,6 +85,31 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:visibility="invisible"
                 tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/stockexchangeText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Stock Exchange"
+                android:visibility="invisible"
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/stockcurrencyText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Currency"
+                android:visibility="invisible"
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/stockcountryText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Country"
+                android:visibility="invisible"
+                tools:visibility="visible" />
+
         </LinearLayout>
     </ScrollView>
 
