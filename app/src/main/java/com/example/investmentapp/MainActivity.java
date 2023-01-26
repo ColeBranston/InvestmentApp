@@ -4,10 +4,14 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,24 +19,35 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import org.json.JSONObject;
 import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.ExecutionException;
 
 import javax.mail.Message;
-import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class MainActivity extends AppCompatActivity {
 
     String apiKey = "KN4OJJ69TA7SFREQ";
     ProgressDialog progress;
+    int counter = 0;
+    LinearLayout container;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +55,87 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         View v = this.getWindow().getDecorView();
         v.setSystemUiVisibility(View.INVISIBLE);
+        container = (LinearLayout) findViewById(R.id.container);
+        getRecentNews();
+    }
+
+    private void getRecentNews() {
+        GetNewsTask task = new GetNewsTask();
+        task.execute();
+
+        try {
+            List<String> newsList = task.get();
+            // Use the newsList variable here
+            for (String news : newsList) {
+                Button button = new Button(this);
+                button.setText(news);
+                button.setGravity(Gravity.CENTER_HORIZONTAL);
+                button.setLayoutParams(new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT));
+
+                button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // Get the text of the button that was clicked
+                        String query = ((Button) v).getText().toString();
+                        // Perform a search for the article online
+                        String url = "https://www.nytimes.com/search?query="+query;
+                        // Open the web page with the URL of the article
+                        Intent i = new Intent(Intent.ACTION_VIEW);
+                        i.setData(Uri.parse(url));
+                        startActivity(i);
+                        }
+                    });
+                container.addView(button);
+            }
+        } catch (ExecutionException e) {
+            // Handle the exception here
+        } catch (InterruptedException e) {
+            // Handle the interruption here
+        }
+    }
+
+    private class GetNewsTask extends AsyncTask<Void, Void, List<String>> {
+
+        @Override
+        protected List<String> doInBackground(Void... voids) {
+            String apiNews = "https://api.nytimes.com/svc/search/v2/articlesearch.json?q=stocks&api-key=BSmG5ZActGr1M7GHJdJtGWdgF0EMOspc";
+            List<String> headlines = new ArrayList<>();
+
+            try {
+                URL url = new URL(apiNews);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("GET");
+                InputStream inputStream = connection.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                String line = "";
+                StringBuilder stringBuilder = new StringBuilder();
+
+                while(line != null){
+                    line = bufferedReader.readLine();
+                    stringBuilder.append(line);
+                }
+                JSONObject jsonObject = new JSONObject(stringBuilder.toString());
+                JSONArray jsonArray = jsonObject.getJSONObject("response").getJSONArray("docs");
+
+                for(int i=0;i<jsonArray.length();i++){
+                    JSONObject object = jsonArray.getJSONObject(i);
+                    String headline = object.getJSONObject("headline").getString("main");
+                    headlines.add(headline);
+                }
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return headlines;
+        }
     }
 
     public void LaunchSearch(View v) {
@@ -69,6 +165,9 @@ public class MainActivity extends AppCompatActivity {
         String quoteName;
         String quotePrice;
         String quoteDesc;
+        String quoteExchange;
+        String quoteCurrency;
+        String quoteCountry;
 
         @Override
         protected void onPreExecute() {
@@ -78,6 +177,7 @@ public class MainActivity extends AppCompatActivity {
             progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             progress.setIndeterminate(true);
             progress.show();
+
         }
 
         @Override
@@ -132,10 +232,16 @@ public class MainActivity extends AppCompatActivity {
                 JSONObject json2 = new JSONObject(stringBuilder2.toString());
                 String quoteName1 = json2.getString("Name");
                 String quoteDesc1 = json2.getString("Description");
+                String quoteExchange1 = json2.getString("Exchange");
+                String quoteCurrency1 = json2.getString("Currency");
+                String quoteCountry1 = json2.getString("Country");
 
                 quoteName = quoteName1;
                 quotePrice = quotePrice1;
                 quoteDesc = quoteDesc1;
+                quoteExchange = quoteExchange1;
+                quoteCurrency = quoteCurrency1;
+                quoteCountry = quoteCountry1;
 
                 return "";
 
@@ -150,23 +256,29 @@ public class MainActivity extends AppCompatActivity {
             progress.dismiss();
 
             if (result != null) {
-                TextView stockpriceText = findViewById(R.id.stockpriceText);
-                stockpriceText.setText("Stock Price: " + quotePrice);
-                stockpriceText.setVisibility(View.VISIBLE);
+                TextView stocknameDisplay = findViewById(R.id.stocknameText);
+                TextView stockpriceDisplay = findViewById(R.id.stockpriceText);
+                TextView stockdescDisplay = findViewById(R.id.stockdescText);
+                TextView stockexchangeDisplay = findViewById(R.id.stockexchangeText);
+                TextView stockcurrecnyDisplay = findViewById(R.id.stockcurrencyText);
+                TextView stockcountryDisplay = findViewById(R.id.stockcountryText);
 
-                TextView stocknameText = findViewById(R.id.stocknameText);
-                stocknameText.setText("Stock Name: " + quoteName);
-                stocknameText.setVisibility(View.VISIBLE);
+                stocknameDisplay.setText("Stock Name: "+quoteName);
+                stockpriceDisplay.setText("Stock Price: "+quotePrice);
+                stockdescDisplay.setText("Stock Description: "+quoteDesc);
+                stockexchangeDisplay.setText("Stock Exchange: "+quoteExchange);
+                stockcurrecnyDisplay.setText("Stock Currency: "+quoteCurrency);
+                stockcountryDisplay.setText("Stock Country: "+quoteCountry);
 
-                TextView stockdescText = findViewById(R.id.stockdescText);
-                stockdescText.setText("Description: "+quoteDesc);
-                stockdescText.setVisibility(View.VISIBLE);
+                stocknameDisplay.setVisibility(View.VISIBLE);
+                stockpriceDisplay.setVisibility(View.VISIBLE);
+                stockdescDisplay.setVisibility(View.VISIBLE);
+                stockexchangeDisplay.setVisibility(View.VISIBLE);
+                stockcurrecnyDisplay.setVisibility(View.VISIBLE);
+                stockcountryDisplay.setVisibility(View.VISIBLE);
 
             } else {
                 Toast.makeText(MainActivity.this, "An error occurred while retrieving the stock price.", Toast.LENGTH_SHORT).show();
-                quoteName = null;
-                quotePrice = null;
-                quoteDesc = null;
             }
         }
     }
@@ -215,8 +327,6 @@ public class MainActivity extends AppCompatActivity {
         if (back) {
             backtoMain(null);
         }
-
-
     }
 
     public void registerNow(View v) {
