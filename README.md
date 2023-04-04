@@ -1,2 +1,2 @@
 # Investment App
-This project is meant to make knowledge concerning the changing markets more accessable and centralised. 
+This is an android investment app, using Java and Android Studio that allows users to research real time stock data and stock news. 
